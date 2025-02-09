@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI副業診断</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: sans-serif;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background: #f5f5f5;
+            border-color: #ccc;
+        }
+        .result-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #2c5282;
+        }
+        .income-info {
+            background: #f0f9ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .time-info {
+            background: #f0fff4;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .skill-info {
+            background: #fff0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .progress {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .restart-button {
+            background: #2c5282;
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <h1 class="title">AI副業診断</h1>
+        <div id="content">
+            <!-- コンテンツはJavaScriptで動的に生成 -->
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: '月の目標収入はどのくらいですか？',
+                options: [
+                    { value: 'low', label: '5万円未満', points: {webwriter: 1, illustration: 2, sns: 0, prompt: 1} },
+                    { value: 'medium', label: '5-10万円', points: {webwriter: 2, illustration: 1, sns: 2, prompt: 2} },
+                    { value: 'high', label: '10万円以上', points: {webwriter: 1, illustration: 0, sns: 2, prompt: 1} }
+                ]
+            },
+            {
+                text: '週にどのくらいの時間を副業に使えますか？',
+                options: [
+                    { value: 'few', label: '5時間未満', points: {webwriter: 0, illustration: 2, sns: 0, prompt: 1} },
+                    { value: 'some', label: '5-15時間', points: {webwriter: 2, illustration: 1, sns: 1, prompt: 2} },
+                    { value: 'many', label: '15時間以上', points: {webwriter: 1, illustration: 0, sns: 2, prompt: 1} }
+                ]
+            },
+            {
+                text: '執筆作業は好きですか？',
+                options: [
+                    { value: 'love', label: '好きで得意', points: {webwriter: 2, illustration: 0, sns: 1, prompt: 2} },
+                    { value: 'ok', label: '苦手ではない', points: {webwriter: 1, illustration: 1, sns: 2, prompt: 1} },
+                    { value: 'hate', label: '苦手', points: {webwriter: 0, illustration: 2, sns: 1, prompt: 0} }
+                ]
+            },
+            {
+                text: '画像作成やデザインに興味はありますか？',
+                options: [
+                    { value: 'high', label: 'とても興味がある', points: {webwriter: 0, illustration: 2, sns: 1, prompt: 0} },
+                    { value: 'medium', label: 'やや興味がある', points: {webwriter: 1, illustration: 1, sns: 2, prompt: 1} },
+                    { value: 'low', label: 'あまり興味がない', points: {webwriter: 2, illustration: 0, sns: 1, prompt: 2} }
+                ]
+            },
+            {
+                text: '新しいAIツールの操作を覚えることについてどう思いますか？',
+                options: [
+                    { value: 'positive', label: '積極的に学びたい', points: {webwriter: 1, illustration: 1, sns: 1, prompt: 2} },
+                    { value: 'neutral', label: '必要なら覚える', points: {webwriter: 2, illustration: 2, sns: 2, prompt: 1} },
+                    { value: 'negative', label: 'できるだけ避けたい', points: {webwriter: 1, illustration: 0, sns: 0, prompt: 0} }
+                ]
+            }
+        ];
+
+        const careers = {
+            webwriter: {
+                title: 'Webライター',
+                description: 'AIを活用して記事やブログ記事を執筆する仕事です。',
+                income: '初心者でも月3-5万円から始められ、慣れてくれば月10-20万円も可能です。',
+                time: '1日3-4時間程度の作業で始められます。',
+                skills: [
+                    'テキストコミュニケーション力',
+                    'WordPressの基本操作',
+                    'SEOの基礎知識'
+                ]
+            },
+            illustration: {
+                title: 'AIイラストクリエイター',
+                description: '生成AIを使って画像やイラストを作成する仕事です。',
+                income: 'イラスト1点500円～数万円で、月5万円程度の収入を目指せます。',
+                time: '空いた時間に作業可能で、1作品30分～2時間程度で作成できます。',
+                skills: [
+                    'デザインセンス',
+                    'AIツールの基本操作',
+                    'トレンドへの理解'
+                ]
+            },
+            sns: {
+                title: 'SNS運用代行',
+                description: 'AIツールを活用して企業のSNSアカウントの投稿や運用を代行します。',
+                income: '月10万円程度の収入を目指せます。',
+                time: '毎日1-2時間程度の作業が必要です。',
+                skills: [
+                    'SNSの基本理解',
+                    'コミュニケーション力',
+                    'マーケティングの基礎知識'
+                ]
+            },
+            prompt: {
+                title: 'プロンプトエンジニア',
+                description: 'AIへの効果的な指示文を作成・販売する新しい職種です。',
+                income: '月3-10万円程度の収入を目指せます。',
+                time: '案件ベースで柔軟に作業可能です。',
+                skills: [
+                    'AIツールの理解',
+                    '論理的思考力',
+                    '基本的な文章力'
+                ]
+            }
+        };
+
+        let currentStep = 0;
+        let points = {
+            webwriter: 0,
+            illustration: 0,
+            sns: 0,
+            prompt: 0
+        };
+
+        function showQuestion() {
+            const question = questions[currentStep];
+            const content = document.getElementById('content');
+            
+            content.innerHTML = `
+                <div class="progress">質問 ${currentStep + 1} / ${questions.length}</div>
+                <div class="question">
+                    <div class="question-text">${question.text}</div>
+                    ${question.options.map(option => `
+                        <button class="button" onclick="answer('${option.value}')">
+                            ${option.label}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function answer(value) {
+            const question = questions[currentStep];
+            const option = question.options.find(opt => opt.value === value);
+            
+            for (let career in option.points) {
+                points[career] += option.points[career];
+            }
+            
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function findBestCareer() {
+            let maxPoints = 0;
+            let bestCareer = null;
+            
+            for (let career in points) {
+                if (points[career] > maxPoints) {
+                    maxPoints = points[career];
+                    bestCareer = career;
+                }
+            }
+            
+            return careers[bestCareer];
+        }
+
+        function showResult() {
+            const bestCareer = findBestCareer();
+            const content = document.getElementById('content');
+            
+            content.innerHTML = `
+                <div class="result-card">
+                    <div class="result-title">${bestCareer.title}</div>
+                    <p>${bestCareer.description}</p>
+                    
+                    <div class="income-info">
+                        <strong>💰 収入の目安：</strong><br>
+                        ${bestCareer.income}
+                    </div>
+                    
+                    <div class="time-info">
+                        <strong>⏰ 必要な時間：</strong><br>
+                        ${bestCareer.time}
+                    </div>
+                    
+                    <div class="skill-info">
+                        <strong>🎯 必要なスキル：</strong>
+                        <ul>
+                            ${bestCareer.skills.map(skill => `
+                                <li>${skill}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+                <button class="button restart-button" onclick="restart()">
+                    もう一度診断する
+                </button>
+            `;
+        }
+
+        function restart() {
+            currentStep = 0;
+            points = {
+                webwriter: 0,
+                illustration: 0,
+                sns: 0,
+                prompt: 0
+            };
+            showQuestion();
+        }
+
+        // 初期表示
+        showQuestion();
+    </script>
+</body>
+</html>
